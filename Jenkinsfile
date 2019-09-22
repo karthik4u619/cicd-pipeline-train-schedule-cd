@@ -20,14 +20,12 @@ pipeline {
             }
         }
         stage('DeployToStaging') {
-            when {
-                branch 'master'
-            }
+            
             steps {
                 withCredentials([usernamePassword(credentialsId: 'jenkins', usernameVariable: 'Username', passwordVariable: 'Password')]) {
                     sshPublisher(
-                        failOnError: true,
-                        continueOnError: false,
+                        failOnError: false,
+                        continueOnError: true,
                         publishers: [
                             sshPublisherDesc(
                                 configName: 'staging',
@@ -50,9 +48,7 @@ pipeline {
             }
         }
         stage('DeployToProduction') {
-            when {
-                branch 'master'
-            }
+            
             steps {
                 input 'Does the staging environment look OK?'
                 milestone(1)
